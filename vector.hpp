@@ -61,12 +61,12 @@ double Vec2Dot(Vec2 v1, Vec2 v2)
     return s;
 }
 
-double Vec2Length2(const Vec2 &v)
+inline double Vec2Length2(const Vec2 &v)
 {
     return Vec2Dot(v, v);
 }
 
-double Vec2Length(const Vec2 &v)
+inline double Vec2Length(const Vec2 &v)
 {
     return sqrt(Vec2Dot(v, v));
 }
@@ -132,12 +132,12 @@ double Vec3Dot(Vec3 v1, Vec3 v3)
     return s;
 }
 
-double Vec3Length3(const Vec3 &v)
+inline double Vec3Length2(const Vec3 &v)
 {
     return Vec3Dot(v, v);
 }
 
-double Vec3Length(const Vec3 &v)
+inline double Vec3Length(const Vec3 &v)
 {
     return sqrt(Vec3Dot(v, v));
 }

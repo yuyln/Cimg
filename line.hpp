@@ -44,14 +44,19 @@ Vec2 VecDistance2D(const LineSegment2D &line, Vec2 X)
     return X_;
 }
 
-double Distance2D(const LineSegment2D &line, Vec2 X)
+inline double Distance2D(const LineSegment2D &line, Vec2 X)
 {
     return Vec2Length(VecDistance2D(line, X));
 }
 
-double DistanceTwo2D(const LineSegment2D &line, Vec2 X)
+inline double DistanceTwo2D(const LineSegment2D &line, Vec2 X)
 {
     return Vec2Length2(VecDistance2D(line, X));
+}
+
+inline bool PaintLine2D(const LineSegment2D &line, Vec2 X, double lw)
+{
+    return DistanceTwo2D(line, X) <= lw * lw;
 }
 
 
