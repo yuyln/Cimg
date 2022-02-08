@@ -11,35 +11,30 @@
 
 int main()
 {
-    int w = 1920 * 2;
-    int h = 1080 * 2;
+    int w = 1920;
+    int h = 1080;
     double r_ = (double)w / (double)h;
     double R0 = 0.4;
     RGBA32 *pixels = new RGBA32[w * h];
 
     size_t n = 100;
     double htheta = 2 * pi / n;
-    LineSegment2D *circle = new LineSegment2D[n + 1];
+    LineSegment2D *curve = new LineSegment2D[n + 1];
 
-    LineSegment2D lineX, lineY;
+    LineSegment2D lineX, lineY, lineXY;
     InitLine2D(&lineX, 0.0, w, h / 2.0, h / 2.0);
     InitLine2D(&lineY, w / 2.0, w / 2.0, 0.0, h);
+    InitLine2D(&lineXY, 0.0, w, h, 0.0);
 
     R0 = h / 3;
     double cx = (double)w / 2.0;
     double cy = (double)h / 2.0;
 
-    for (size_t i = 0; i <= n; i++)
-    {
-        InitLine2D(&circle[i], (R0 * cos((double)i * htheta) + cx), 
-                               (R0 * cos((double)(i + 1) * htheta) + cx), 
-                               R0 * sin((double)i * htheta) + cy,
-                               R0 * sin((double)(i + 1) * htheta) + cy);
-    }
+
     htheta = (double)w / (double)n;
     for (size_t i = 0; i <= n; i++)
     {
-        InitLine2D(&circle[i], (double)i * htheta, 
+        InitLine2D(&curve[i], (double)i * htheta, 
                                (double)(i + 1) * htheta, 
                                (double)h / 2.0 - (double)h / 2.0 * sin(2.0 * pi / (double)w * (double)i * htheta),
                                (double)h / 2.0 - (double)h / 2.0 * sin(2.0 * pi / (double)w * (double)(i + 1) * htheta));
@@ -51,21 +46,14 @@ int main()
         for (int x = 0; x < w; x++)
         {
             double U = (double)x / (double)(w);
-            R r = 255;
-            G g = 255;
-            B b = 255;
-            A a = 255;
-
-            R r_ = r;
-            G g_ = g;
-            B b_ = b;
-            A a_ = a;
-            double minD = DistanceTwo2D(circle[0], Vec2From(x, y));
-            double maxD = DistanceTwo2D(circle[0], Vec2From(x, y));
+            RGBA rgba = {{1.0, 1.0, 1.0, 1.0}};
+            RGBA rgba2 = {{0.0, 0.0, 0.0, 0.0}};
+            double minD = DistanceTwo2D(curve[0], Vec2From(x, y));
+            double maxD = DistanceTwo2D(curve[0], Vec2From(x, y));
 
             for (size_t i = 0; i <= n; i++)
             {
-                double d = DistanceTwo2D(circle[i], Vec2From(x, y));
+                double d = DistanceTwo2D(curve[i], Vec2From(x, y));
                 if (d < minD)
                 {
                     minD = d;
@@ -78,30 +66,34 @@ int main()
 
             if (minD < 6 * 6)
             {
-                r = g = b = 0;
+                rgba.p[R] = rgba.p[G] = rgba.p[B] = 0.0;
             }
             else
             {
-                // r = (R)(exp(-minD / 5000) * 255) & 255;
-                // b = (B)(exp(-minD / 100000) * 255) & 255;
-                b = (B)(exp(-minD / 5000) * 255) & 255;
-                g = b;
-                r = ~max(b, g);
-                b = b | r;
-                g = g | r;
+                rgba.p[B] = 0.5;
+                // rgba.p[R] = rgba.p[G] = 0.0;
             }
 
             if (PaintLine2D(lineX, Vec2From(x, y), 5))
             {
-                r = b = g = 0;
+                rgba.p[R] = rgba.p[G] = rgba.p[B] = 0.0;
             }
 
             if (PaintLine2D(lineY, Vec2From(x, y), 5))
             {
-                r = b = g = 0;
+                rgba.p[R] = rgba.p[G] = rgba.p[B] = 0.0;
             }
 
-            pixels[y * w + x] = ToRGBA32(r, g, b, a);
+            if (PaintLine2D(lineXY, Vec2From(x, y), 5))
+            {
+                rgba.p[R] = rgba.p[G] = rgba.p[B] = 0.0;
+            }
+            else
+            {
+                double minD = DistanceTwo2D(lineXY, Vec2From(x, y));
+            }
+            Vec4 s = Vec4Sum(rgba, rgba2);
+            pixels[y * w + x] = ToRGBA32(s);
         }
     }
 

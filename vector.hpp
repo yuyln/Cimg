@@ -71,6 +71,24 @@ inline double Vec2Length(const Vec2 &v)
     return sqrt(Vec2Dot(v, v));
 }
 
+inline Vec2 Vec2Pow(Vec2 v1, Vec2 v2)
+{
+    for (int i = 0; i < 2; i++)
+    {
+        v1.p[i] = pow(v1.p[i], v2.p[i]);
+    }
+    return v1;
+}
+
+inline Vec2 Vec2Pow(Vec2 v1, double v2)
+{
+    for (int i = 0; i < 2; i++)
+    {
+        v1.p[i] = pow(v1.p[i], v2);
+    }
+    return v1;
+}
+
 typedef struct
 {
     double p[3];
@@ -142,6 +160,113 @@ inline double Vec3Length(const Vec3 &v)
     return sqrt(Vec3Dot(v, v));
 }
 
+inline Vec3 Vec3Pow(Vec3 v1, Vec3 v3)
+{
+    for (int i = 0; i < 3; i++)
+    {
+        v1.p[i] = pow(v1.p[i], v3.p[i]);
+    }
+    return v1;
+}
+
+inline Vec3 Vec3Pow(Vec3 v1, double v3)
+{
+    for (int i = 0; i < 3; i++)
+    {
+        v1.p[i] = pow(v1.p[i], v3);
+    }
+    return v1;
+}
+
+
+typedef struct
+{
+    double p[4];
+} Vec4;
+
+Vec4 Vec4FromScalar(double x)
+{
+    return (Vec4){x, x};
+}
+
+Vec4 Vec4From(double x, double y)
+{
+    return (Vec4){x, y};
+}
+
+Vec4 Vec4Sum(Vec4 v1, Vec4 v4)
+{
+    for (int i = 0; i < 4; i++)
+    {
+        v1.p[i] += v4.p[i];
+    }
+    return v1;
+}
+
+Vec4 Vec4Sub(Vec4 v1, Vec4 v4)
+{
+    for (int i = 0; i < 4; i++)
+    {
+        v1.p[i] -= v4.p[i];
+    }
+    return v1;
+}
+
+Vec4 Vec4Mult(Vec4 v1, Vec4 v4)
+{
+    for (int i = 0; i < 4; i++)
+    {
+        v1.p[i] *= v4.p[i];
+    }
+    return v1;
+}
+
+Vec4 Vec4MultScalar(Vec4 v, double s)
+{
+    for (int i = 0; i < 4; i++)
+    {
+        v.p[i] *= s;
+    }
+    return v;
+}
+
+double Vec4Dot(Vec4 v1, Vec4 v4)
+{
+    double s = 0.0;
+    for (int i = 0; i < 4; i++)
+    {
+        s += v1.p[i] * v4.p[i];
+    }
+    return s;
+}
+
+inline double Vec4Length2(const Vec4 &v)
+{
+    return Vec4Dot(v, v);
+}
+
+inline double Vec4Length(const Vec4 &v)
+{
+    return sqrt(Vec4Dot(v, v));
+}
+
+inline Vec4 Vec4Pow(Vec4 v1, Vec4 v4)
+{
+    for (int i = 0; i < 4; i++)
+    {
+        v1.p[i] = pow(v1.p[i], v4.p[i]);
+    }
+    return v1;
+}
+
+inline Vec4 Vec4Pow(Vec4 v1, double v4)
+{
+    for (int i = 0; i < 4; i++)
+    {
+        v1.p[i] = pow(v1.p[i], v4);
+    }
+    return v1;
+}
 
 
 #endif
