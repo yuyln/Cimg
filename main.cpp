@@ -3,9 +3,10 @@
 #include <cstdlib>
 #include <cinttypes>
 #include <cmath>
-#include "functions.hpp"
 #include <cstring>
 #include "stb_image_write.h"
+#include "functions.hpp"
+#include "funcs.tpp"
 #include "vector.hpp"
 #include "line.hpp"
 
@@ -20,6 +21,7 @@ int main()
     size_t n = 100;
     double htheta = 2 * pi / n;
     LineSegment2D *curve = new LineSegment2D[n + 1];
+    LineSegment2D *curve2 = new LineSegment2D[n + 1];
 
     LineSegment2D lineX, lineY, lineXY;
     InitLine2D(&lineX, 0.0, w, h / 2.0, h / 2.0);
@@ -30,14 +32,20 @@ int main()
     double cx = (double)w / 2.0;
     double cy = (double)h / 2.0;
 
-
     htheta = (double)w / (double)n;
     for (size_t i = 0; i <= n; i++)
     {
-        InitLine2D(&curve[i], (double)i * htheta, 
-                               (double)(i + 1) * htheta, 
-                               (double)h / 2.0 - (double)h / 2.0 * sin(2.0 * pi / (double)w * (double)i * htheta),
-                               (double)h / 2.0 - (double)h / 2.0 * sin(2.0 * pi / (double)w * (double)(i + 1) * htheta));
+        double x = i * htheta;
+        double xp = (i + 1) * htheta;
+        InitLine2D(&curve[i], x,
+                   xp,
+                   (double)h / 2.0 - (double)h / 2.0 * sin(2.0 * pi / (double)(w) * x),
+                   (double)h / 2.0 - (double)h / 2.0 * sin(2.0 * pi / (double)(w) * xp));
+
+        InitLine2D(&curve2[i], x,
+                   xp,
+                   x * x,
+                   xp * xp);
     }
 
     for (int y = 0; y < h; y++)
@@ -47,7 +55,8 @@ int main()
         {
             double U = (double)x / (double)(w);
             RGBA rgba = {{1.0, 1.0, 1.0, 1.0}};
-            RGBA rgba2 = {{0.0, 0.0, 0.0, 0.0}};
+            RGBA rgba2 = {{0.0, 0.0, 0.0, 1.0}};
+            RGBA rgba3 = {{0.0, 0.0, 0.0, 1.0}};
             double minD = DistanceTwo2D(curve[0], Vec2From(x, y));
             double maxD = DistanceTwo2D(curve[0], Vec2From(x, y));
 
@@ -70,8 +79,18 @@ int main()
             }
             else
             {
-                rgba.p[B] = 0.5;
-                // rgba.p[R] = rgba.p[G] = 0.0;
+                rgba.p[B] = exp(-minD / 1000);
+                if (rgba.p[B] > 1.0)
+                {
+                    rgba.p[B] = 1.0;
+                }
+                rgba.p[R] = rgba.p[G] = 1.0 - rgba.p[B];
+
+                rgba.p[B] = exp(-minD / 1000) + exp(minD / 1000);
+                if (rgba.p[B] > 1.0)
+                {
+                    rgba.p[B] = 1.0;
+                }
             }
 
             if (PaintLine2D(lineX, Vec2From(x, y), 5))
@@ -91,17 +110,28 @@ int main()
             else
             {
                 double minD = DistanceTwo2D(lineXY, Vec2From(x, y));
+                rgba2.p[R] = exp(-minD / 1000);
+                if (rgba2.p[R] > 1.0)
+                {
+                    rgba2.p[R] = 1.0;
+                }
+                rgba2.p[B] = rgba2.p[G] = 1.0 - rgba2.p[R];
+
+                rgba2.p[R] = exp(-minD / 1000) + exp(minD / 1000);
+                if (rgba2.p[R] > 1.0)
+                {
+                    rgba2.p[R] = 1.0;
+                }
             }
-            Vec4 s = Vec4Sum(rgba, rgba2);
+            rgba = Vec4Pow(rgba, 1.0 / 2.2);
+            rgba2 = Vec4Pow(rgba2, 1.0 / 2.2);
+            Vec4 s = Vec4Mult(rgba, rgba2);
             pixels[y * w + x] = ToRGBA32(s);
         }
     }
 
-
-
-
     stbi_write_png("out.png", w, h, 4, pixels, w * sizeof(RGBA32));
-    #if 0
+#if 0
     {
         char pal[] = "VAI SE";
         uint64_t l;
@@ -112,6 +142,6 @@ int main()
         memcpy(pal, &l, 7);
         printf("%s\n", pal);
     }
-    #endif
+#endif
     return 0;
 }

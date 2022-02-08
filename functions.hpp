@@ -15,12 +15,6 @@ typedef uint32_t RGB32;
 
 static double const pi = acos(-1.0);
 
-template <typename T>
-inline T max(T v1, T v2)
-{
-    return v1 * (v1 >= v2) + v2 * (v2 > v1);
-}
-
 inline uint8_t GetAlpha(RGBA32 f)
 {
     return (f & 0xFF000000) >> 8 * 3;
