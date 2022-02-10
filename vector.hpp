@@ -13,7 +13,7 @@ Vec2 Vec2FromScalar(double x)
 
 Vec2 Vec2From(double x, double y)
 {
-    return (Vec2){x, y};
+    return (Vec2){{x, y}};
 }
 
 Vec2 Vec2Sum(Vec2 v1, Vec2 v2)
@@ -99,6 +99,22 @@ inline Vec2 Vec2Max(Vec2 v1, Vec2 v2)
     return v1;
 }
 
+inline void Vec2FixUpper(Vec2 &v, double U)
+{
+    for (int i = 0; i < 2; i++)
+    {
+        v.p[i] = v.p[i] * (v.p[i] <= U) + U * (v.p[i] > U);
+    }
+}
+
+inline void Vec2FixLower(Vec2 &v, double U)
+{
+    for (int i = 0; i < 2; i++)
+    {
+        v.p[i] = v.p[i] * (v.p[i] >= U) + U * (v.p[i] < U);
+    }
+}
+
 typedef struct
 {
     double p[3];
@@ -109,9 +125,9 @@ Vec3 Vec3FromScalar(double x)
     return (Vec3){x, x};
 }
 
-Vec3 Vec3From(double x, double y)
+Vec3 Vec3From(double x, double y, double z)
 {
-    return (Vec3){x, y};
+    return (Vec3){{x, y, z}};
 }
 
 Vec3 Vec3Sum(Vec3 v1, Vec3 v3)
@@ -197,6 +213,22 @@ inline Vec3 Vec3Max(Vec3 v1, Vec3 v3)
     return v1;
 }
 
+inline void Vec3FixUpper(Vec3 &v, double U)
+{
+    for (int i = 0; i < 3; i++)
+    {
+        v.p[i] = v.p[i] * (v.p[i] <= U) + U * (v.p[i] > U);
+    }
+}
+
+inline void Vec3FixLower(Vec3 &v, double U)
+{
+    for (int i = 0; i < 3; i++)
+    {
+        v.p[i] = v.p[i] * (v.p[i] >= U) + U * (v.p[i] < U);
+    }
+}
+
 typedef struct
 {
     double p[4];
@@ -207,9 +239,9 @@ Vec4 Vec4FromScalar(double x)
     return (Vec4){x, x};
 }
 
-Vec4 Vec4From(double x, double y)
+Vec4 Vec4From(double x, double y, double z, double w)
 {
-    return (Vec4){x, y};
+    return (Vec4){{x, y, z, w}};
 }
 
 Vec4 Vec4Sum(Vec4 v1, Vec4 v4)
@@ -293,5 +325,21 @@ inline Vec4 Vec4Max(Vec4 v1, Vec4 v4)
         v1.p[i] = max_(v1.p[i], v4.p[i]);
     }
     return v1;
+}
+
+inline void Vec4FixUpper(Vec4 &v, double U)
+{
+    for (int i = 0; i < 4; i++)
+    {
+        v.p[i] = v.p[i] * (v.p[i] <= U) + U * (v.p[i] > U);
+    }
+}
+
+inline void Vec4FixLower(Vec4 &v, double U)
+{
+    for (int i = 0; i < 4; i++)
+    {
+        v.p[i] = v.p[i] * (v.p[i] >= U) + U * (v.p[i] < U);
+    }
 }
 #endif
