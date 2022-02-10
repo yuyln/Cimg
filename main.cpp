@@ -40,17 +40,22 @@ int main()
     Triangule(triangulo, Vec2From(w / 4, 0), Vec2From(w / 5.5, -h / 3.3), Vec2From(w / 3.3, -h / 6.0));
     Square(quadrado, Vec2From(-w / 3, h / 5), Vec2From(-w / 5, h / 5), Vec2From(-w / 5, h / 3), Vec2From(-w / 3, h / 3));
 
+    RGBA rgba = {{1.0, 1.0, 1.0, 1.0}};
+    RGBA rgba2 = {{1.0, 1.0, 1.0, 1.0}};
+    RGBA rgba3 = {{1.0, 1.0, 1.0, 1.0}};
+    RGBA rgba4 = {{1.0, 1.0, 1.0, 1.0}};
+    RGBA rgba5 = {{1.0, 1.0, 1.0, 1.0}};
     for (int y = -h / 2; y < h / 2; y++)
     {
         int y_ = y + h / 2;
         for (int x = -w / 2; x < w / 2; x++)
         {
+            rgba = {{1.0, 1.0, 1.0, 1.0}};
+            rgba2 = {{1.0, 1.0, 1.0, 1.0}};
+            rgba3 = {{1.0, 1.0, 1.0, 1.0}};
+            rgba4 = {{1.0, 1.0, 1.0, 1.0}};
+            rgba5 = {{1.0, 1.0, 1.0, 1.0}};
             int x_ = x + w / 2.0;
-            RGBA rgba = {{1.0, 1.0, 1.0, 1.0}};
-            RGBA rgba2 = {{1.0, 1.0, 1.0, 1.0}};
-            RGBA rgba3 = {{1.0, 1.0, 1.0, 1.0}};
-            RGBA rgba4 = {{1.0, 1.0, 1.0, 1.0}};
-            RGBA rgba5 = {{1.0, 1.0, 1.0, 1.0}};
             double dummy, dummy2;
             Show(xaxis, 6, x, y, &dummy, &dummy2, rgba);
             Show(yaxis, 6, x, y, &dummy, &dummy2, rgba);
@@ -65,11 +70,9 @@ int main()
             s = Vec4Mult(s, rgba4);
             s = Vec4Mult(s, rgba5);
             s = Vec4Pow(s, 1.0 / 2.2);
-
             pixels[(h - 1 - y_) * w + x_] = (~ToRGBA32(s)) | 0xFF000000;
         }
     }
-
     stbi_write_png("out.png", w, h, 4, pixels, w * sizeof(RGBA32));
     return 0;
 }
