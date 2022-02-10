@@ -4,13 +4,13 @@
 #include <cinttypes>
 #include <cmath>
 #include <cstring>
-#include "stb_image_write.h"
-#include "functions.hpp"
-#include "funcs.tpp"
-#include "vector.hpp"
-#include "line.hpp"
-#include "curve.hpp"
-#include "forms.hpp"
+#include "headers/stb_image_write.h"
+#include "headers/functions.hpp"
+#include "headers/funcs.tpp"
+#include "headers/vector.hpp"
+#include "headers/line.hpp"
+#include "headers/curve.hpp"
+#include "headers/forms.hpp"
 
 int main()
 {
