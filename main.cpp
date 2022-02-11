@@ -70,8 +70,8 @@ int main()
             s = Vec4Mult(s, rgba3);
             s = Vec4Mult(s, rgba4);
             s = Vec4Mult(s, rgba5);
-            s = Vec4Pow(s, 1.0 / 2.2);
-            pixels[(h - 1 - y_) * w + x_] = (~ToRGBA32(s)) | 0xFF000000;
+            s = Vec4PowS(s, 1.0 / 2.2);
+            pixels[(h - 1 - y_) * w + x_] = (~ToRGBA32V4(s)) | 0xFF000000;
         }
     }
     stbi_write_png("./imgs/out.png", w, h, 4, pixels, w * sizeof(RGBA32));

@@ -3,3 +3,5 @@
 *.exe
 *.backup
 a.out
+builds
+paintCL.hpp
