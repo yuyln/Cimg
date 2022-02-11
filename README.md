@@ -6,3 +6,4 @@ Some images created:
 ![firstIMG](imgs/first.png)
 ![secondIMG](imgs/second.png)
 ![thirdIMG](imgs/third.png)
+![GPUIMG](imgs/outG.png)
