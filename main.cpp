@@ -15,8 +15,8 @@
 
 int main()
 {
-    int w = 1920;
-    int h = 1080;
+    int w = 800;
+    int h = 600;
     double r_ = (double)w / (double)h;
     RGBA32 *pixels = new RGBA32[w * h];
 
@@ -49,6 +49,10 @@ int main()
     for (int y = -h / 2; y < h / 2; y++)
     {
         int y_ = y + h / 2;
+        if (y_ % (h / 10) == 0)
+        {
+            printf("%d\n", y_);
+        }
         for (int x = -w / 2; x < w / 2; x++)
         {
             rgba = {{1.0, 1.0, 1.0, 1.0}};

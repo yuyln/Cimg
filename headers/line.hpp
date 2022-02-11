@@ -29,7 +29,7 @@ void InitLine2D(LineSegment2D *line, double xmin, double xmax, double ymin, doub
 
 Vec2 Point2D(const LineSegment2D line, double t)
 {
-    return (Vec2){{(t >= 1.0) * line.xmax + (t <= 0) * line.xmin + (t > 0.0 && t < 1.0) * (line.kx * t + line.cx),
+    return Vec2{{(t >= 1.0) * line.xmax + (t <= 0) * line.xmin + (t > 0.0 && t < 1.0) * (line.kx * t + line.cx),
                   (t >= 1.0) * line.ymax + (t <= 0) * line.ymin + (t > 0.0 && t < 1.0) * (line.ky * t + line.cy)}};
 }
 
