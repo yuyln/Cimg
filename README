@@ -1,2 +1,2 @@
 To compile without CMake, use:
-`g++ -Ofast -Iheaders/ -IOpenCLWrapper/OpenCL/include -LOpenCLWrapper/OpenCL/lib -lOpenCL -o CImag main.cpp`
+```g++ -Ofast -Iheaders/ -IOpenCLWrapper/OpenCL/include -LOpenCLWrapper/OpenCL/lib -lOpenCL -o CImag main.cpp```
