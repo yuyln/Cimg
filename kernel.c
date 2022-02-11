@@ -33,3 +33,17 @@ kernel void ShowGGPU(global RGBA *rgba, global LineSegment2D *lines, const Vec4 
     double dummy, dummy2;
     ShowG(lines, nlines, lw, x, y, &dummy, &dummy2, &rgba[I], pR, Gcol);
 }
+
+kernel void Collapse(global RGBA *rgba, global RGBA32 *pixels, const int T, const int nrgbas)
+{
+    int j = get_global_id(0);
+    RGBA s = {{1.0, 1.0, 1.0, 1.0}};
+
+    for (int i = 0; i < nrgbas; i++)
+    {
+        s = Vec4Mult(s, rgba[i * T + j]);
+    }
+    
+    s = Vec4PowS(s, 1.0 / 2.2);
+    pixels[j] = (~ToRGBA32V4(s)) | 0xFF000000;
+}

@@ -12,6 +12,14 @@ void Square(Curve &C, const Vec2 &p1, const Vec2 &p2, Vec2 const &p3, Vec2 const
     InitLine2D(&C.lines[3], p4.p[0], p1.p[0], p4.p[1], p1.p[1]);
 }
 
+void SquareCenter(Curve &C, const Vec2 &cen, double w, double h)
+{
+    InitLine2D(&C.lines[0], cen.p[0] - w / 2, cen.p[0] + w / 2, cen.p[1] - h / 2, cen.p[1] - h / 2);
+    InitLine2D(&C.lines[1], cen.p[0] + w / 2, cen.p[0] + w / 2, cen.p[1] - h / 2, cen.p[1] + h / 2);
+    InitLine2D(&C.lines[2], cen.p[0] + w / 2, cen.p[0] - w / 2, cen.p[1] + h / 2, cen.p[1] + h / 2);
+    InitLine2D(&C.lines[3], cen.p[0] - w / 2, cen.p[0] - w / 2, cen.p[1] + h / 2, cen.p[1] - h / 2);
+}
+
 void Triangule(Curve &C, const Vec2 &p1, const Vec2 &p2, Vec2 const &p3)
 {
     InitLine2D(&C.lines[0], p1.p[0], p2.p[0], p1.p[1], p2.p[1]);

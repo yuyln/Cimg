@@ -28,11 +28,12 @@ int main()
     Kernel *kernels;
     size_t *globalwork;
     size_t *localwork;
-    const char *kernelnames[3] = {"ShowLGPU", "ShowCGPU", "ShowGGPU"};
+    const char *kernelnames[4] = {"ShowLGPU", "ShowCGPU", "ShowGGPU", "Collapse"};
 
     int w = 1920;
     int h = 1080;
     int T = w * h;
+    RGBA32 *pixels = new RGBA32[T];
 
     char *kernel;
     ReadFile("kernel.c", &kernel);
@@ -45,86 +46,106 @@ int main()
     InitProgram(&program, &context, 1, (const char**)&kernel);
     BuildProgram(&program, 1, devices, "-I./headers -DOPENCLCOMP");
 
-    InitKernelsStructGround(&kernels, &ks, &program, kernelnames, 3);
+    InitKernelsStructGround(&kernels, &ks, &program, kernelnames, 4);
 
     InitGlobalWorkItems(1, &T, &globalwork);
     InitGroupWorkItemsGCD(1, &T, &localwork, devices);
 
-    RGBA *rgbas = new RGBA[T];
-    RGBA *rgbas2 = new RGBA[T];
-    RGBA32 *pixels = new RGBA32[T];
-    Curve seno, sin2;
-    cl_mem senob, sin2b;
-    cl_mem RGBAsb, RGBAcb;
+    int n = 6;
+    Curve *curves = new Curve[n];
+    cl_mem *curvesb = new cl_mem[n];
 
-    InitCurve(&seno, 100);
-    InitCurve(&sin2, 100);
-    Sin(seno, h / 2, 1.0 / w, 0.0, -w / 2.0, w / 2.0);
-    Sin(sin2, -h / 2, 1.0 / w, 0.0, -w / 2.0, w / 2.0);
+    InitCurve(&curves[0], 100); 
+    Sin(curves[0], h / 2, 1.0 / w, 0.0, -w / 2.0, w / 2.0);
 
-    CreateBuffer(&senob, seno.lines, sizeof(LineSegment2D) * seno.nLines, context, CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR);
-    WriteBuffer(&senob, seno.lines, sizeof(LineSegment2D) * seno.nLines, queue);
-    CreateBuffer(&sin2b, sin2.lines, sizeof(LineSegment2D) * sin2.nLines, context, CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR);
-    WriteBuffer(&sin2b, sin2.lines, sizeof(LineSegment2D) * sin2.nLines, queue);
+    InitCurve(&curves[1], 100); 
+    Sin(curves[1], -h / 2, 1.0 / w, 0.0, -w / 2.0, w / 2.0);
+
+    InitCurve(&curves[2], 3); 
+    Triangule(curves[2], Vec2From(w / 4, 0), Vec2From(w / 5.5, -h / 3.3), Vec2From(w / 3.3, -h / 6.0));
+
+    InitCurve(&curves[3], 4);
+    SquareCenter(curves[3], Vec2From(-w / 4, h / 4), 160, 160);
+
+    InitCurve(&curves[4], 100);
+    Ellipse(curves[4], Vec2From(-w / 4, -h / 4), Vec2FromScalar(100));
+
+    InitCurve(&curves[5], 100);
+    Ellipse(curves[5], Vec2From(w / 4, h / 4), Vec2From(100, 200));
 
 
-    rgbas = new RGBA[T];
-    rgbas2 = new RGBA[T];
-    CreateBuffer(&RGBAsb, rgbas, sizeof(RGBA) * T, context, CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR);
-    CreateBuffer(&RGBAcb, rgbas2, sizeof(RGBA) * T, context, CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR);
-    for (int j = 0; j < T; j++)
+    for (int i = 0; i < n; i++)
     {
-        rgbas[j] = {{1.0, 1.0, 1.0, 1.0}};
-        rgbas2[j] = {{1.0, 1.0, 1.0, 1.0}};
+        CreateBuffer(&curvesb[i], curves[i].lines, sizeof(LineSegment2D) * curves[i].nLines, context, CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR);
+        WriteBuffer(&curvesb[i], curves[i].lines, sizeof(LineSegment2D) * curves[i].nLines, queue);
     }
-    WriteBuffer(&RGBAsb, rgbas, sizeof(RGBA) * T, queue);
-    WriteBuffer(&RGBAcb, rgbas2, sizeof(RGBA) * T, queue);
 
+    RGBA *rgbas = new RGBA[T * n];
+    cl_mem *rgbasb = new cl_mem[n];
 
-    Vec4 col = {{0.0, 0b10011000, 255.0, 0.0}};
-    col = Vec4MultScalar(col, 1.0 / 255.0);
-    double pR = 100.0;
+    for (int i = 0; i < n; i++)
+    {
+        CreateBuffer(&rgbasb[i], &rgbas[i * T], sizeof(RGBA) * T, context, CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR);
+        for (int j = 0; j < T; j++)
+        {
+            rgbas[i * T + j] = {{1.0, 1.0, 1.0, 1.0}};
+        }
+        WriteBuffer(&rgbasb[i], &rgbas[i * T], sizeof(RGBA) * T, queue);
+    }
+
+    const Vec4 cols[6] = {{{0.0, 103.0, 255.0, 0.0}}, 
+                        {{255.0, 0x67, 0.0, 0.0}},
+                        {{255.0, 0.0, 0.0, 0.0}},
+                        {{255.0, 0.0, 255.0}},
+                        {{255.0, 255.0, 0.0}},
+                        {{0.0, 0.0, 255.0, 0.0}}};
+    double pR = 50.0;
     double lw = 6.0;
+    for (int i = 0; i < n; i++)
+    {
+        Vec4 col = Vec4MultScalar(cols[i], 1.0 / 255.0);
+        SetKernelArg(&kernels[2], &rgbasb[i], sizeof(cl_mem), 0);
+        SetKernelArg(&kernels[2], &curvesb[i], sizeof(cl_mem), 1);
+        SetKernelArg(&kernels[2], &col, sizeof(Vec4), 2);
+        SetKernelArg(&kernels[2], &w, sizeof(int), 3);
+        SetKernelArg(&kernels[2], &h, sizeof(int), 4);
+        SetKernelArg(&kernels[2], &(curves[i].nLines), sizeof(int), 5);
+        SetKernelArg(&kernels[2], &lw, sizeof(double), 6);
+        SetKernelArg(&kernels[2], &pR, sizeof(double), 7);    
 
-    SetKernelArg(&kernels[2], &RGBAsb, sizeof(cl_mem), 0);
-    SetKernelArg(&kernels[2], &senob, sizeof(cl_mem), 1);
-    SetKernelArg(&kernels[2], &col, sizeof(Vec4), 2);
-    SetKernelArg(&kernels[2], &w, sizeof(int), 3);
-    SetKernelArg(&kernels[2], &h, sizeof(int), 4);
-    SetKernelArg(&kernels[2], &seno.nLines, sizeof(int), 5);
-    SetKernelArg(&kernels[2], &lw, sizeof(double), 6);
-    SetKernelArg(&kernels[2], &pR, sizeof(double), 7);
-
-    EnqueueND(&queue, &kernels[2], 1, NULL, globalwork, localwork);
-
-    col = {{0xFF, 0x67, 0.0, 0.0}};
-    col = Vec4MultScalar(col, 1.0 / 255.0);
-    pR = 100.0;
-    lw = 6.0;
-
-    SetKernelArg(&kernels[2], &RGBAcb, sizeof(cl_mem), 0);
-    SetKernelArg(&kernels[2], &sin2b, sizeof(cl_mem), 1);
-    SetKernelArg(&kernels[2], &col, sizeof(Vec4), 2);
-    SetKernelArg(&kernels[2], &w, sizeof(int), 3);
-    SetKernelArg(&kernels[2], &h, sizeof(int), 4);
-    SetKernelArg(&kernels[2], &sin2.nLines, sizeof(int), 5);
-    SetKernelArg(&kernels[2], &lw, sizeof(double), 6);
-    SetKernelArg(&kernels[2], &pR, sizeof(double), 7);
-    
-    EnqueueND(&queue, &kernels[2], 1, NULL, globalwork, localwork);
-
+        EnqueueND(&queue, &kernels[2], 1, NULL, globalwork, localwork);
+    }
     Finish(&queue);
 
-    ReadBuffer(&RGBAsb, rgbas, sizeof(RGBA) * T, queue);
-    ReadBuffer(&RGBAcb, rgbas2, sizeof(RGBA) * T, queue);
-
-    for (int i = 0; i < T; i++)
+    for (int i = 0; i < n; i++)
     {
-        RGBA s = Vec4Sum(Vec4FromScalar(0.0), rgbas[i]);
-        s = Vec4Mult(s, rgbas2[i]);
-        s = Vec4PowS(s, 1.0 / 2.2);
-        pixels[i] = (ToRGBA32V4(s)) | 0xFF000000;
+        ReadBuffer(&rgbasb[i], &rgbas[i * T], sizeof(RGBA) * T, queue);
     }
+
+    for (int j = 0; j < T; j++)
+    {
+        int x = (j % w);
+        int y = (j - x) / w;
+        RGBA s = {{1.0, 1.0, 1.0, 1.0}};
+        for (int i = 0; i < n; i++)
+        {
+            s = Vec4Mult(s, rgbas[i * T + j]);
+        }
+        s = Vec4PowS(s, 1.0 / 2.2);
+        pixels[(h - 1 - y) * w + x] = (~ToRGBA32V4(s)) | 0xFF000000;
+        if (j % (T / 10) == 0)
+        {
+            printf("%d\n", j);
+        }
+    }
+
+
+    // for (int i = 0; i < T; i++)
+    // {
+    //     RGBA s = Vec4Sum(Vec4FromScalar(0.0), rgbas[i]);
+    //     s = Vec4PowS(s, 1.0 / 2.2);
+    //     pixels[i] = (~ToRGBA32V4(s)) | 0xFF000000;
+    // }
 
     stbi_write_png("./imgs/outG.png", w, h, 4, pixels, w * sizeof(RGBA32));
     return 0;
