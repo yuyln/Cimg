@@ -28,6 +28,7 @@ int main()
     Kernel *kernels;
     size_t *globalwork;
     size_t *localwork;
+    const char *kernelnames[3] = {"ShowLGPU", "ShowCGPU", "ShowGGPU"};
 
     int w = 1920;
     int h = 1080;
@@ -44,6 +45,8 @@ int main()
 
     InitProgram(&program, &context, 1, (const char**)&kernel);
     BuildProgram(&program, 1, devices, "-I./headers -DOPENCLCOMP");
+
+    InitKernelsStructGround(&kernels, &ks, &program, kernelnames, 3);
 
     InitGlobalWorkItems(1, &T, &globalwork);
     InitGroupWorkItemsGCD(1, &T, &localwork, devices);

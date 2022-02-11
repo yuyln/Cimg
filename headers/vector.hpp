@@ -98,8 +98,11 @@ inline Vec2 Vec2Max(Vec2 v1, Vec2 v2)
     }
     return v1;
 }
-
+#ifndef OPENCLCOMP
 inline void Vec2FixUpper(Vec2 *v, double U)
+#else
+inline void Vec2FixUpper(global Vec2 *v, double U)
+#endif
 {
     for (int i = 0; i < 2; i++)
     {
@@ -107,7 +110,11 @@ inline void Vec2FixUpper(Vec2 *v, double U)
     }
 }
 
+#ifndef OPENCLCOMP
 inline void Vec2FixLower(Vec2 *v, double U)
+#else
+inline void Vec2FixLower(global Vec2 *v, double U)
+#endif
 {
     for (int i = 0; i < 2; i++)
     {
@@ -213,7 +220,11 @@ inline Vec3 Vec3Max(Vec3 v1, Vec3 v3)
     return v1;
 }
 
+#ifndef OPENCLCOMP
 inline void Vec3FixUpper(Vec3 *v, double U)
+#else
+inline void Vec3FixUpper(global Vec3 *v, double U)
+#endif
 {
     for (int i = 0; i < 3; i++)
     {
@@ -221,7 +232,11 @@ inline void Vec3FixUpper(Vec3 *v, double U)
     }
 }
 
+#ifndef OPENCLCOMP
 inline void Vec3FixLower(Vec3 *v, double U)
+#else
+inline void Vec3FixLower(global Vec3 *v, double U)
+#endif
 {
     for (int i = 0; i < 3; i++)
     {
@@ -327,7 +342,11 @@ inline Vec4 Vec4Max(Vec4 v1, Vec4 v3)
     return v1;
 }
 
+#ifndef OPENCLCOMP
 inline void Vec4FixUpper(Vec4 *v, double U)
+#else
+inline void Vec4FixUpper(global Vec4 *v, double U)
+#endif
 {
     for (int i = 0; i < 4; i++)
     {
@@ -335,7 +354,11 @@ inline void Vec4FixUpper(Vec4 *v, double U)
     }
 }
 
+#ifndef OPENCLCOMP
 inline void Vec4FixLower(Vec4 *v, double U)
+#else
+inline void Vec4FixLower(global Vec4 *v, double U)
+#endif
 {
     for (int i = 0; i < 4; i++)
     {
