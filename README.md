@@ -3,6 +3,6 @@ To compile without CMake, use:
 
 Some images created:
 
-[firstIMG](imgs/first.png)
-[secondIMG](imgs/second.png)
-[thirdIMG](imgs/third.png)
+![firstIMG](imgs/first.png)
+![secondIMG](imgs/second.png)
+![thirdIMG](imgs/third.png)
