@@ -1,8 +1,8 @@
 #ifndef __CURVE
 #define __CURVE
-#include "line.hpp"
-#include "vector.hpp"
-#include "functions.hpp"
+#include <line.hpp>
+#include <vector.hpp>
+#include <functions.hpp>
 typedef struct
 {
     LineSegment2D *lines;

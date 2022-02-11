@@ -1,8 +1,8 @@
 #ifndef __FORMS
 #define __FORMS
-#include "functions.hpp"
-#include "line.hpp"
-#include "curve.hpp"
+#include <functions.hpp>
+#include <line.hpp>
+#include <curve.hpp>
 
 void Square(Curve &C, const Vec2 &p1, const Vec2 &p2, Vec2 const &p3, Vec2 const &p4)
 {

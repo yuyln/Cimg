@@ -2,7 +2,7 @@
 #define __FUNC
 #include <cinttypes>
 #include <cmath>
-#include "vector.hpp"
+#include <vector.hpp>
 #define R 0
 #define G 1
 #define B 2

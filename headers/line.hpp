@@ -3,7 +3,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
-#include "vector.hpp"
+#include <vector.hpp>
 
 typedef struct
 {

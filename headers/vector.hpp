@@ -1,6 +1,6 @@
 #ifndef __VEC
 #define __VEC
-#include "funcs.tpp"
+#include <funcs.tpp>
 typedef struct
 {
     double p[2];
