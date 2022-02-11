@@ -74,7 +74,7 @@ int main()
             pixels[(h - 1 - y_) * w + x_] = (~ToRGBA32(s)) | 0xFF000000;
         }
     }
-    stbi_write_png("out.png", w, h, 4, pixels, w * sizeof(RGBA32));
+    stbi_write_png("./imgs/out.png", w, h, 4, pixels, w * sizeof(RGBA32));
     return 0;
 }
 
