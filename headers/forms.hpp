@@ -23,7 +23,7 @@ void Ellipse(Curve &C, const Vec2 &center, const Vec2 &r)
 {
     double htheta = 2.0 * pi / C.nLines;
     double R0 = 100.0;
-    for (int i = 0; i < C.nLines; i++)
+    for (size_t i = 0; i < C.nLines; i++)
     {
         double t = i * htheta;
         double tp = (i + 1) * htheta;
@@ -37,7 +37,7 @@ void Ellipse(Curve &C, const Vec2 &center, const Vec2 &r)
 void Sin(Curve &C, double a, double w, double f, double x0, double xf)
 {
     double htheta = (xf - x0) / (double)C.nLines;
-    for (int i = 0; i < C.nLines; i++)
+    for (size_t i = 0; i < C.nLines; i++)
     {
         double x = i * htheta + x0;
         double xp = (i + 1) * htheta + x0;

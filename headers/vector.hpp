@@ -8,12 +8,12 @@ typedef struct
 
 Vec2 Vec2FromScalar(double x)
 {
-    return Vec2{{x, x}};
+    return (Vec2){{x, x}};
 }
 
 Vec2 Vec2From(double x, double y)
 {
-    return Vec2{{x, y}};
+    return (Vec2){{x, y}};
 }
 
 Vec2 Vec2Sum(Vec2 v1, Vec2 v2)
@@ -122,12 +122,12 @@ typedef struct
 
 Vec3 Vec3FromScalar(double x)
 {
-    return Vec3{{x, x, x}};
+    return (Vec3){{x, x, x}};
 }
 
 Vec3 Vec3From(double x, double y, double z)
 {
-    return Vec3{{x, y, z}};
+    return (Vec3){{x, y, z}};
 }
 
 Vec3 Vec3Sum(Vec3 v1, Vec3 v3)
@@ -236,12 +236,12 @@ typedef struct
 
 Vec4 Vec4FromScalar(double x)
 {
-    return Vec4{{x, x, x, x}};
+    return (Vec4){{x, x, x, x}};
 }
 
 Vec4 Vec4From(double x, double y, double z, double w)
 {
-    return Vec4{{x, y, z, w}};
+    return (Vec4){{x, y, z, w}};
 }
 
 Vec4 Vec4Sum(Vec4 v1, Vec4 v4)
@@ -342,4 +342,5 @@ inline void Vec4FixLower(Vec4 *v, double U)
         v->p[i] = v->p[i] * (v->p[i] >= U) + U * (v->p[i] < U);
     }
 }
+
 #endif

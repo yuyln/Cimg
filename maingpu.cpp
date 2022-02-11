@@ -29,6 +29,11 @@ int main()
     size_t *globalwork;
     size_t *localwork;
 
+    int w = 1920;
+    int h = 1080;
+    int T = w * h;
+
+
     char *kernel;
     ReadFile("kernel.c", &kernel);
 
@@ -39,6 +44,9 @@ int main()
 
     InitProgram(&program, &context, 1, (const char**)&kernel);
     BuildProgram(&program, 1, devices, "-I./headers -DOPENCLCOMP");
+
+    InitGlobalWorkItems(1, &T, &globalwork);
+    InitGroupWorkItemsGCD(1, &T, &localwork, devices);
     return 0;
 }
 
