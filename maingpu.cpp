@@ -138,15 +138,6 @@ int main()
             printf("%d\n", j);
         }
     }
-
-
-    // for (int i = 0; i < T; i++)
-    // {
-    //     RGBA s = Vec4Sum(Vec4FromScalar(0.0), rgbas[i]);
-    //     s = Vec4PowS(s, 1.0 / 2.2);
-    //     pixels[i] = (~ToRGBA32V4(s)) | 0xFF000000;
-    // }
-
     stbi_write_png("./imgs/outG.png", w, h, 4, pixels, w * sizeof(RGBA32));
     return 0;
 }
