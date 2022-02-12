@@ -18,6 +18,7 @@
 int main()
 {
     int i_ = 1;
+    int iD = 0;
     int nplat, ndev;
     cl_platform_id *plats;
     cl_device_id *devices;
@@ -40,16 +41,16 @@ int main()
 
     InitPlatforms(&plats, &nplat);
     InitDevice(&devices, plats[i_], i_, &ndev);
-    InitContext(&context, devices);
-    InitQueue(&queue, &context, devices);
+    InitContext(&context, &devices[iD]);
+    InitQueue(&queue, &context, &devices[iD]);
 
     InitProgram(&program, &context, 1, (const char**)&kernel);
-    BuildProgram(&program, 1, devices, "-I./headers -DOPENCLCOMP");
+    BuildProgram(&program, 1, &devices[iD], "-I./headers -DOPENCLCOMP");
 
     InitKernelsStructGround(&kernels, &ks, &program, kernelnames, 4);
 
     InitGlobalWorkItems(1, &T, &globalwork);
-    InitGroupWorkItemsGCD(1, &T, &localwork, devices);
+    InitGroupWorkItemsGCD(1, &T, &localwork, &devices[iD]);
 
     int n = 6;
     Curve *curves = new Curve[n];

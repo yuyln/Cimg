@@ -70,6 +70,8 @@ inline RGBA32 ToRGBA32D(double r, double g, double b, double a)
 
 inline RGBA32 ToRGBA32V4(Vec4 v)
 {
+    Vec4FixLower(&v, 0.0);
+    Vec4FixUpper(&v, 1.0);
     return ((int_32)((size_t)(fabs(v.p[B]) * 255.0) & 255)) << 8 * 2 |
            ((int_32)((size_t)(fabs(v.p[G]) * 255.0) & 255)) << 8 * 1 |
            ((int_32)((size_t)(fabs(v.p[R]) * 255.0) & 255)) << 8 * 0 |
