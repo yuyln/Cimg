@@ -19,34 +19,34 @@ void InitCurve(Curve *C, size_t n)
 #endif
 
 #ifdef OPENCLCOMP
-double max_(double a, double b)
+float max_(float a, float b)
 {
     return a * (a >= b) + b * (b > a);
 }
 #endif
 
 #ifndef OPENCLCOMP
-void Show(const Curve &c, const double &lw, const double &x, const double &y, double *minD_, double *maxD_, RGBA *rgba)
+void Show(const Curve &c, const float &lw, const float &x, const float &y, float *minD_, float *maxD_, RGBA *rgba)
 #else
-void Show(global const LineSegment2D *lines, const int nlines, const double lw, const double x, const double y, private double *minD_, private double *maxD_, global RGBA *rgba)
+void Show(global const LineSegment2D *lines, const int nlines, const float lw, const float x, const float y, private float *minD_, private float *maxD_, global RGBA *rgba)
 #endif
 {
     #ifndef OPENCLCOMP
-    double minD = DistanceTwo2D(c.lines[0], Vec2From(x, y));
-    double maxD = DistanceTwo2D(c.lines[0], Vec2From(x, y));
+    float minD = DistanceTwo2D(c.lines[0], Vec2From(x, y));
+    float maxD = DistanceTwo2D(c.lines[0], Vec2From(x, y));
     #else
-    double minD = DistanceTwo2D(lines[0], Vec2From(x, y));
-    double maxD = DistanceTwo2D(lines[0], Vec2From(x, y));
+    float minD = DistanceTwo2D(lines[0], Vec2From(x, y));
+    float maxD = DistanceTwo2D(lines[0], Vec2From(x, y));
     #endif
 
     #ifndef OPENCLCOMP
     for (size_t i = 1; i < c.nLines; i++)
     {
-        double d = DistanceTwo2D(c.lines[i], Vec2From(x, y));
+        float d = DistanceTwo2D(c.lines[i], Vec2From(x, y));
     #else
     for (size_t i = 1; i < nlines; i++)
     {
-        double d = DistanceTwo2D(lines[i], Vec2From(x, y));
+        float d = DistanceTwo2D(lines[i], Vec2From(x, y));
     #endif
         if (d < minD)
         {
@@ -67,27 +67,27 @@ void Show(global const LineSegment2D *lines, const int nlines, const double lw, 
 }
 
 #ifndef OPENCLCOMP
-void ShowC(const Curve &c, const double &lw, const double &x, const double &y, double *minD_, double *maxD_, RGBA *rgba, const Vec4 &color)
+void ShowC(const Curve &c, const float &lw, const float &x, const float &y, float *minD_, float *maxD_, RGBA *rgba, const Vec4 &color)
 #else
-void ShowC(global const LineSegment2D *lines, const int nlines, const double lw, const double x, const double y, private double *minD_, private double *maxD_, global RGBA *rgba, const Vec4 color)
+void ShowC(global const LineSegment2D *lines, const int nlines, const float lw, const float x, const float y, private float *minD_, private float *maxD_, global RGBA *rgba, const Vec4 color)
 #endif
 {
     #ifndef OPENCLCOMP
-    double minD = DistanceTwo2D(c.lines[0], Vec2From(x, y));
-    double maxD = DistanceTwo2D(c.lines[0], Vec2From(x, y));
+    float minD = DistanceTwo2D(c.lines[0], Vec2From(x, y));
+    float maxD = DistanceTwo2D(c.lines[0], Vec2From(x, y));
     #else
-    double minD = DistanceTwo2D(lines[0], Vec2From(x, y));
-    double maxD = DistanceTwo2D(lines[0], Vec2From(x, y));
+    float minD = DistanceTwo2D(lines[0], Vec2From(x, y));
+    float maxD = DistanceTwo2D(lines[0], Vec2From(x, y));
     #endif
 
     #ifndef OPENCLCOMP
     for (size_t i = 1; i < c.nLines; i++)
     {
-        double d = DistanceTwo2D(c.lines[i], Vec2From(x, y));
+        float d = DistanceTwo2D(c.lines[i], Vec2From(x, y));
     #else
     for (size_t i = 1; i < nlines; i++)
     {
-        double d = DistanceTwo2D(lines[i], Vec2From(x, y));
+        float d = DistanceTwo2D(lines[i], Vec2From(x, y));
     #endif
         if (d < minD)
         {
@@ -109,14 +109,14 @@ void ShowC(global const LineSegment2D *lines, const int nlines, const double lw,
     }
 }
 #ifndef OPENCLCOMP
-void ShowG(const Curve &c, const double &lw, const double &x, const double &y, double *minD_, double *maxD_, RGBA *rgba, 
-           const double &pR, const Vec4 &glowC)
+void ShowG(const Curve &c, const float &lw, const float &x, const float &y, float *minD_, float *maxD_, RGBA *rgba, 
+           const float &pR, const Vec4 &glowC)
 #else
-void ShowG(global const LineSegment2D *lines, const int nlines, const double lw, const double x, const double y, private double *minD_, private double *maxD_, global RGBA *rgba, 
-           const double pR, const Vec4 glowC)
+void ShowG(global const LineSegment2D *lines, const int nlines, const float lw, const float x, const float y, private float *minD_, private float *maxD_, global RGBA *rgba, 
+           const float pR, const Vec4 glowC)
 #endif
 {
-    double minD, maxD;
+    float minD, maxD;
     #ifndef OPENCLCOMP
     Show(c, lw, x, y, &minD, &maxD, rgba);
     #else
@@ -131,9 +131,9 @@ void ShowG(global const LineSegment2D *lines, const int nlines, const double lw,
     }
     else
     {
-        double rtemp = rgba->p[R] = glowC.p[R] * exp(-minD / (pR * pR));
-        double gtemp = rgba->p[G] = glowC.p[G] * exp(-minD / (pR * pR));
-        double btemp = rgba->p[B] = glowC.p[B] * exp(-minD / (pR * pR));
+        float rtemp = rgba->p[R] = glowC.p[R] * exp(-minD / (pR * pR));
+        float gtemp = rgba->p[G] = glowC.p[G] * exp(-minD / (pR * pR));
+        float btemp = rgba->p[B] = glowC.p[B] * exp(-minD / (pR * pR));
         Vec4FixUpper(rgba, 1.0);
         Vec4FixLower(rgba, 0.0);
         rgba->p[R] += 1.0 - max_(gtemp, btemp);

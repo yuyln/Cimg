@@ -17,7 +17,7 @@
 //TODO: change how everything its included on openclkernel
 int main()
 {
-    int i_ = 1;
+    int i_ = 0;
     int iD = 0;
     int nplat, ndev;
     cl_platform_id *plats;
@@ -105,8 +105,8 @@ int main()
                         {{255.0, 0.0, 255.0}},
                         {{255.0, 255.0, 0.0}},
                         {{0.0, 0.0, 255.0, 0.0}}};
-    double pR = 50.0;
-    double lw = 3.5;
+    float pR = 50.0;
+    float lw = 3.5;
     for (int i = 0; i < n - 2; i++)
     {
         Vec4 col = Vec4MultScalar(cols[i], 1.0 / 255.0);
@@ -116,8 +116,8 @@ int main()
         SetKernelArg(&kernels[2], &w, sizeof(int), 3);
         SetKernelArg(&kernels[2], &h, sizeof(int), 4);
         SetKernelArg(&kernels[2], &(curves[i].nLines), sizeof(int), 5);
-        SetKernelArg(&kernels[2], &lw, sizeof(double), 6);
-        SetKernelArg(&kernels[2], &pR, sizeof(double), 7);    
+        SetKernelArg(&kernels[2], &lw, sizeof(float), 6);
+        SetKernelArg(&kernels[2], &pR, sizeof(float), 7);    
 
         EnqueueND(&queue, &kernels[2], 1, NULL, globalwork, localwork);
     }
@@ -130,7 +130,7 @@ int main()
         SetKernelArg(&kernels[0], &w, sizeof(int), 2);
         SetKernelArg(&kernels[0], &h, sizeof(int), 3);
         SetKernelArg(&kernels[0], &(curves[i].nLines), sizeof(int), 4);
-        SetKernelArg(&kernels[0], &lw, sizeof(double), 5);
+        SetKernelArg(&kernels[0], &lw, sizeof(float), 5);
 
         EnqueueND(&queue, &kernels[0], 1, NULL, globalwork, localwork);
     }

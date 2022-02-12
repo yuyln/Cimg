@@ -12,7 +12,7 @@ void Square(Curve &C, const Vec2 &p1, const Vec2 &p2, Vec2 const &p3, Vec2 const
     InitLine2D(&C.lines[3], p4.p[0], p1.p[0], p4.p[1], p1.p[1]);
 }
 
-void SquareCenter(Curve &C, const Vec2 &cen, double w, double h)
+void SquareCenter(Curve &C, const Vec2 &cen, float w, float h)
 {
     InitLine2D(&C.lines[0], cen.p[0] - w / 2, cen.p[0] + w / 2, cen.p[1] - h / 2, cen.p[1] - h / 2);
     InitLine2D(&C.lines[1], cen.p[0] + w / 2, cen.p[0] + w / 2, cen.p[1] - h / 2, cen.p[1] + h / 2);
@@ -29,12 +29,12 @@ void Triangule(Curve &C, const Vec2 &p1, const Vec2 &p2, Vec2 const &p3)
 
 void Ellipse(Curve &C, const Vec2 &center, const Vec2 &r)
 {
-    double htheta = 2.0 * pi / C.nLines;
-    double R0 = 100.0;
+    float htheta = 2.0 * pi / C.nLines;
+    float R0 = 100.0;
     for (size_t i = 0; i < C.nLines; i++)
     {
-        double t = i * htheta;
-        double tp = (i + 1) * htheta;
+        float t = i * htheta;
+        float tp = (i + 1) * htheta;
         InitLine2D(&C.lines[i], r.p[0] * cos(t) + center.p[0],
                                       r.p[0] * cos(tp) + center.p[0],
                                       r.p[1] * sin(t) + center.p[1],
@@ -42,13 +42,13 @@ void Ellipse(Curve &C, const Vec2 &center, const Vec2 &r)
     }
 }
 
-void Sin(Curve &C, double a, double w, double f, double x0, double xf)
+void Sin(Curve &C, float a, float w, float f, float x0, float xf)
 {
-    double htheta = (xf - x0) / (double)C.nLines;
+    float htheta = (xf - x0) / (float)C.nLines;
     for (size_t i = 0; i < C.nLines; i++)
     {
-        double x = i * htheta + x0;
-        double xp = (i + 1) * htheta + x0;
+        float x = i * htheta + x0;
+        float xp = (i + 1) * htheta + x0;
         InitLine2D(&C.lines[i], x,
                    xp,
                    a * sin(2.0 * pi * w * x + f),
@@ -56,7 +56,7 @@ void Sin(Curve &C, double a, double w, double f, double x0, double xf)
     }
 }
 
-void Cos(Curve &C, double a, double w, double f, double x0, double xf)
+void Cos(Curve &C, float a, float w, float f, float x0, float xf)
 {
     Sin(C, a, w, pi / 2.0, x0, xf);
 }

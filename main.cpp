@@ -17,11 +17,11 @@ int main()
 {
     int w = 800;
     int h = 600;
-    double r_ = (double)w / (double)h;
+    float r_ = (float)w / (float)h;
     RGBA32 *pixels = new RGBA32[w * h];
 
     size_t n = 100;
-    double htheta = 2 * pi / n;
+    float htheta = 2 * pi / n;
     Curve seno, circulo, triangulo, quadrado, ell, seno2;
     Curve xaxis, yaxis, line1, line2;
 
@@ -61,7 +61,7 @@ int main()
             rgba4 = {{1.0, 1.0, 1.0, 1.0}};
             rgba5 = {{1.0, 1.0, 1.0, 1.0}};
             int x_ = x + w / 2.0;
-            double dummy, dummy2;
+            float dummy, dummy2;
             Show(xaxis, 6, x, y, &dummy, &dummy2, &rgba);
             Show(yaxis, 6, x, y, &dummy, &dummy2, &rgba);
             Show(triangulo, 6, x, y, &dummy, &dummy2, &rgba);

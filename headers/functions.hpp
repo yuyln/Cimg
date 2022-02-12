@@ -27,7 +27,7 @@ typedef int_32 RGBA32;
 typedef int_32 RGB32;
 
 #ifndef OPENCLCOMP
-static double const pi = acos(-1.0);
+static float const pi = acos(-1.0);
 #endif
 
 inline int_8 GetAlpha(RGBA32 f)
@@ -60,7 +60,7 @@ inline RGBA32 ToRGBA32I8(int_8 r, int_8 g, int_8 b, int_8 a)
     return b << 8 * 2 | g << 8 * 1 | r << 8 * 0 | a << 8 * 3;
 }
 
-inline RGBA32 ToRGBA32D(double r, double g, double b, double a)
+inline RGBA32 ToRGBA32D(float r, float g, float b, float a)
 {
     return ((int_32)((size_t)(fabs(b) * 255.0) & 255)) << 8 * 2 |
            ((int_32)((size_t)(fabs(g) * 255.0) & 255)) << 8 * 1 |
