@@ -52,7 +52,7 @@ int main()
     InitGlobalWorkItems(1, &T, &globalwork);
     InitGroupWorkItemsGCD(1, &T, &localwork, &devices[iD]);
 
-    int n = 6;
+    int n = 8;
     Curve *curves = new Curve[n];
     cl_mem *curvesb = new cl_mem[n];
 
@@ -68,12 +68,17 @@ int main()
     InitCurve(&curves[3], 4);
     SquareCenter(curves[3], Vec2From(-w / 4, h / 4), 160, 160);
 
-    InitCurve(&curves[4], 100);
+    InitCurve(&curves[4], 5);
     Ellipse(curves[4], Vec2From(-w / 4, -h / 4), Vec2FromScalar(100));
 
-    InitCurve(&curves[5], 100);
+    InitCurve(&curves[5], 50);
     Ellipse(curves[5], Vec2From(w / 4, h / 4), Vec2From(100, 200));
 
+    InitCurve(&curves[6], 1);
+    InitLine2D(curves[6].lines, -w / 2, w / 2, 0.0, 0.0);
+
+    InitCurve(&curves[7], 1);
+    InitLine2D(curves[7].lines, 0.0, 0.0, -h / 2, h / 2);
 
     for (int i = 0; i < n; i++)
     {
@@ -102,7 +107,7 @@ int main()
                         {{0.0, 0.0, 255.0, 0.0}}};
     double pR = 50.0;
     double lw = 6.0;
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n - 2; i++)
     {
         Vec4 col = Vec4MultScalar(cols[i], 1.0 / 255.0);
         SetKernelArg(&kernels[2], &rgbasb[i], sizeof(cl_mem), 0);
@@ -116,6 +121,20 @@ int main()
 
         EnqueueND(&queue, &kernels[2], 1, NULL, globalwork, localwork);
     }
+
+
+    for (int i = 6; i < n; i++)
+    {
+        SetKernelArg(&kernels[0], &rgbasb[i], sizeof(cl_mem), 0);
+        SetKernelArg(&kernels[0], &curvesb[i], sizeof(cl_mem), 1);
+        SetKernelArg(&kernels[0], &w, sizeof(int), 2);
+        SetKernelArg(&kernels[0], &h, sizeof(int), 3);
+        SetKernelArg(&kernels[0], &(curves[i].nLines), sizeof(int), 4);
+        SetKernelArg(&kernels[0], &lw, sizeof(double), 5);
+
+        EnqueueND(&queue, &kernels[0], 1, NULL, globalwork, localwork);
+    }
+
     Finish(&queue);
 
     for (int i = 0; i < n; i++)
