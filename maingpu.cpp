@@ -106,7 +106,7 @@ int main()
                         {{255.0, 255.0, 0.0}},
                         {{0.0, 0.0, 255.0, 0.0}}};
     double pR = 50.0;
-    double lw = 6.0;
+    double lw = 3.5;
     for (int i = 0; i < n - 2; i++)
     {
         Vec4 col = Vec4MultScalar(cols[i], 1.0 / 255.0);
