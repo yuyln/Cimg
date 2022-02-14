@@ -17,7 +17,6 @@
 //TODO: change how everything its included on openclkernel
 int main()
 {
-    setenv("CUDA_CACHE_DISABLE", "1", 1);
     int i_ = 0;
     int iD = 0;
     int nplat, ndev;
