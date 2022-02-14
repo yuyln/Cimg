@@ -108,6 +108,7 @@ void ShowC(global const LineSegment2D *lines, const int nlines, const float lw, 
         rgba->p[B] = color.p[B];
     }
 }
+
 #ifndef OPENCLCOMP
 void ShowG(const Curve &c, const float &lw, const float &x, const float &y, float *minD_, float *maxD_, RGBA *rgba, 
            const float &pR, const Vec4 &glowC)
@@ -128,12 +129,15 @@ void ShowG(global const LineSegment2D *lines, const int nlines, const float lw, 
     if (minD < lw * lw)
     {
         rgba->p[R] = rgba->p[G] = rgba->p[B] = 0.0;
+        return;
     }
-    else
+
+    float exp_ = exp(-minD / (pR * pR));
+    if(exp_ > 0.005)
     {
-        float rtemp = rgba->p[R] = glowC.p[R] * exp(-minD / (pR * pR));
-        float gtemp = rgba->p[G] = glowC.p[G] * exp(-minD / (pR * pR));
-        float btemp = rgba->p[B] = glowC.p[B] * exp(-minD / (pR * pR));
+        float rtemp = rgba->p[R] = glowC.p[R] * exp_;
+        float gtemp = rgba->p[G] = glowC.p[G] * exp_;
+        float btemp = rgba->p[B] = glowC.p[B] * exp_;
         Vec4FixUpper(rgba, 1.0);
         Vec4FixLower(rgba, 0.0);
         rgba->p[R] += 1.0 - max_(gtemp, btemp);
@@ -143,6 +147,5 @@ void ShowG(global const LineSegment2D *lines, const int nlines, const float lw, 
         Vec4FixLower(rgba, 0.0);
     }
 }
-#else
 #endif
 

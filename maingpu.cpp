@@ -17,6 +17,7 @@
 //TODO: change how everything its included on openclkernel
 int main()
 {
+    setenv("CUDA_CACHE_DISABLE", "1", 1);
     int i_ = 0;
     int iD = 0;
     int nplat, ndev;
@@ -45,12 +46,13 @@ int main()
     InitQueue(&queue, &context, &devices[iD]);
 
     InitProgram(&program, &context, 1, (const char**)&kernel);
-    BuildProgram(&program, 1, &devices[iD], "-I./headers -DOPENCLCOMP");
+    BuildProgram(&program, 1, &devices[iD], "-I ./headers -DOPENCLCOMP");
 
     InitKernelsStructGround(&kernels, &ks, &program, kernelnames, 4);
 
     InitGlobalWorkItems(1, &T, &globalwork);
     InitGroupWorkItemsGCD(1, &T, &localwork, &devices[iD]);
+    InitGroupWorkItemsYGCD(1, &T, &localwork, 15);
 
     int n = 8;
     Curve *curves = new Curve[n];
