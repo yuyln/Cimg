@@ -67,7 +67,7 @@ int main()
     Triangule(curves[2], Vec2From(w / 4, 0), Vec2From(w / 5.5, -h / 3.3), Vec2From(w / 3.3, -h / 6.0));
 
     InitCurve(&curves[3], 4);
-    SquareCenter(curves[3], Vec2From(-w / 4, h / 4), 160, 160);
+    SquareCenter(curves[3], Vec2From(-w / 4, h / 4), 160.0, 160.0, pi / 3.0f);
 
     InitCurve(&curves[4], 5);
     Ellipse(curves[4], Vec2From(-w / 4, -h / 4), Vec2FromScalar(100));
