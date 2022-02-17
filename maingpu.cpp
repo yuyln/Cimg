@@ -11,7 +11,7 @@
 #include <line.hpp>
 #include <curve.hpp>
 #include <forms.hpp>
-#define HEADER_IMPL
+#define OPENCLWRAPPER_IMPLEMTATION
 #include <OpenCLWrapper.h>
 
 //TODO: change how everything its included on openclkernel
@@ -27,8 +27,8 @@ int main()
     cl_program program;
     cl_kernel *ks;
     Kernel *kernels;
-    size_t *globalwork;
-    size_t *localwork;
+    size_t globalwork;
+    size_t localwork;
     const char *kernelnames[4] = {"ShowLGPU", "ShowCGPU", "ShowGGPU", "Collapse"};
 
     int w = 1920;
@@ -49,9 +49,8 @@ int main()
 
     InitKernelsStructGround(&kernels, &ks, &program, kernelnames, 4);
 
-    InitGlobalWorkItems(1, &T, &globalwork);
-    InitGroupWorkItemsGCD(1, &T, &localwork, &devices[iD]);
-    InitGroupWorkItemsYGCD(1, &T, &localwork, 15);
+    InitGlobalWorkItems1D(T, &globalwork);
+    InitGroupWorkItemsGCD1D(T, &localwork, &devices[iD]);
 
     int n = 8;
     Curve *curves = new Curve[n];
@@ -120,7 +119,7 @@ int main()
         SetKernelArg(&kernels[2], &lw, sizeof(float), 6);
         SetKernelArg(&kernels[2], &pR, sizeof(float), 7);    
 
-        EnqueueND(&queue, &kernels[2], 1, NULL, globalwork, localwork);
+        EnqueueND(&queue, &kernels[2], 1, NULL, &globalwork, &localwork);
     }
 
 
@@ -133,7 +132,7 @@ int main()
         SetKernelArg(&kernels[0], &(curves[i].nLines), sizeof(int), 4);
         SetKernelArg(&kernels[0], &lw, sizeof(float), 5);
 
-        EnqueueND(&queue, &kernels[0], 1, NULL, globalwork, localwork);
+        EnqueueND(&queue, &kernels[0], 1, NULL, &globalwork, &localwork);
     }
 
     Finish(&queue);
